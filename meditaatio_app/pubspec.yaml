@@ -37,6 +37,7 @@ dependencies:
   just_audio: ^0.9.18
   bordered_text: ^2.0.0
   google_fonts: ^2.2.0
+  font_awesome_flutter: ^9.2.0
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import '../models/item.dart';
 import 'package:bordered_text/bordered_text.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
@@ -77,26 +80,34 @@ class MainViewState extends State<MainView> {
                 ),
                 trailing: IconButton(
                   icon: _playingIndex == index
-                      ? const Icon(
-                          Icons.stop,
+                      ? const FaIcon(
+                          Icons.stop_circle_outlined,
                           size: 34,
                         )
-                      : const Icon(
-                          Icons.play_arrow,
+                      : const FaIcon(
+                          Icons.play_circle_fill_outlined,
                           size: 34,
                         ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_playingIndex == index) {
                       setState(() {
                         _playingIndex = null;
                       });
                       audioPlayer.stop();
                     } else {
-                      audioPlayer.setAsset(items[index].audioPath);
-                      audioPlayer.play();
-                      setState(() {
-                        _playingIndex = index;
-                      });
+                      try {
+                        await audioPlayer.setAsset(items[index].audioPath);
+                        audioPlayer.play();
+                        setState(() {
+                          _playingIndex = index;
+                        });
+                      } on SocketException {
+                        // ignore: avoid_print
+                        print('No internet here');
+                      } catch (error) {
+                        // ignore: avoid_print
+                        print(error);
+                      }
                     }
                   },
                 ),
